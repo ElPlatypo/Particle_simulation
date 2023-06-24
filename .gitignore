@@ -2,4 +2,5 @@
 /vis/venv
 *.svg
 *.png
+*.csv
 Cargo.lock

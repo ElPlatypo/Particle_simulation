@@ -112,30 +112,28 @@ impl HexBoard {
     }
 
     pub fn advance_timestep_repulsive(&mut self) {
-        for x in 0..self.size{
-            for y in 0..self.size {
-
-                let hex = self.get_cell(x as i16, y as i16);
-                let start_energy = self.get_energy(hex);
-                let ne = self.get_neighbours(x as i16, y as i16);
-                let i = self.rng.gen_range(0..ne.len());
-                let dest = ne[i];
-                if dest.value == false && hex.value == true{
-                    
-                    let end_energy = (self.get_energy(dest) as i16 - 1) as f64;
-                    //move particle according to energy change
-                    if start_energy as f64 > end_energy {
-                        self.set_cell(x as i16, y as i16, false);
-                        self.set_cell(dest.x, dest.y, true);
-                    }
+        let rx = self.rng.gen_range(0..self.size);
+        let ry = self.rng.gen_range(0..self.size);
+        let hex = self.get_cell(rx as i16, ry as i16);
+        if hex.value == true {
+            let start_energy = self.get_energy(hex);
+            let ne = self.get_neighbours(rx as i16, ry as i16);
+            let i = self.rng.gen_range(0..ne.len());
+            let dest = ne[i];
+            if dest.value == false {
+                let end_energy = (self.get_energy(dest) as i16 - 1) as f64;
                 
-                    else if start_energy as f64 <= end_energy {
-                        let delta: f64 = (start_energy as f64 - end_energy) as f64;
-                        let check: bool = self.accept_change(delta);
-                        if check == true {
-                            self.set_cell(x as i16, y as i16, false);
-                            self.set_cell(dest.x, dest.y, true);
-                        }
+                if start_energy as f64 > end_energy {
+                    self.set_cell(rx as i16, ry as i16, false);
+                    self.set_cell(dest.x, dest.y, true);
+                }
+            
+                else if start_energy as f64 <= end_energy {
+                    let delta: f64 = (start_energy as f64 - end_energy) as f64;
+                    let check: bool = self.accept_change(delta);
+                    if check == true {
+                        self.set_cell(rx as i16, ry as i16, false);
+                        self.set_cell(dest.x, dest.y, true);
                     }
                 }
             }
@@ -220,57 +218,6 @@ impl HexBoard {
         return order;
     }
 
-    pub fn get_order_single(&self) -> f32 {
-
-        let mut count_a: f32 = 0.0;
-        let mut count_b: f32 = 0.0;
-        let mut count_c: f32 = 0.0;
-        for i in 0..3 {
-            for x in 0..self.size {
-                for y in 0..self.size {
-                    let hex = self.get_cell(x as i16, y as i16);
-                    if y % 2 == 0{
-                        if i == 0 {
-                            if x % 3 == 0 && hex.value == true{
-                                count_a += 1.0;
-                            }
-                        }
-                        else if i == 1 {
-                            if (x as i16 - 1) % 3 == 0 && hex.value == true{
-                                count_b += 1.0;
-                            }
-                        }
-                        else if i == 2 {
-                            if (x as i16 - 2) % 3 == 0 && hex.value == true{
-                                count_c +=1.0;
-                            }
-                        }
-                    }
-                    else if (y - 1) % 2 == 0 {
-                        if i == 0 {
-                            if (x as i16 - 1) % 3 == 0 && hex.value == true{
-                                count_a += 1.0;
-                            }
-                        }
-                        else if i == 1 {
-                            if (x as i16 - 2) % 3 == 0 && hex.value == true{
-                                count_b += 1.0;
-                            }
-                        }
-                        else if i == 2 {
-                            if x % 3 == 0 && hex.value == true{
-                                count_c += 1.0;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        let amount = ((self.size * self.size) as f32 * self.fillrate) as u16;
-        let order = (count_a as f32 / amount as f32) + ((count_b as f32 / amount as f32) * 2.0) + ((count_c as f32 / amount as f32) * 3.0); 
-
-        return order;
-    }
 
     pub fn printfile(&mut self, filename: &str) {
         let mut xdata: Vec<u16> = vec![];

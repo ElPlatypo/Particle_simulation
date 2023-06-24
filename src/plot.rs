@@ -54,6 +54,46 @@ impl Plot {
         .draw().unwrap();
     }
 
+    pub fn plot_multiple_orders(&self, path: &str, caption: &str, data: Vec<Vec<Vec<(i32, f64)>>>, color_start: &RGBColor, color_end: &RGBColor, labels: Vec<String>) {
+
+        //initialize image
+        let backend = SVGBackend::new(path , (self.x_size, self.y_size)).into_drawing_area();
+        backend.fill(&WHITE).unwrap();
+
+        //initialize context of image
+        let mut chartbuilder = ChartBuilder::on(&backend);
+        chartbuilder.caption(caption, ("Arial", 30))
+        .set_all_label_area_size(40);
+
+        //draw cartesian plane
+        let mut chartcontext = chartbuilder.build_cartesian_2d(
+            self.x_range.clone(), 
+            self.y_range.clone()
+        ).unwrap();
+
+        chartcontext.configure_mesh().draw().unwrap();
+
+        //plot timeseries
+        let gradient: Vec<RGBColor> = self.get_gradient(color_start, color_end, data.len());
+        for plot_id in 0..data.len() {
+            for order_value in 0..3 {
+                let grad = gradient[plot_id].clone();
+                chartcontext
+                    .draw_series(LineSeries::new(data[plot_id][order_value].clone(), gradient[plot_id]))
+                    .unwrap()
+                    .label(labels[plot_id].to_string())
+                    .legend(move |(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], grad));
+            }
+        }
+
+        //draw labels
+        chartcontext
+        .configure_series_labels()
+        .border_style(&BLACK)
+        .position(SeriesLabelPosition::UpperLeft)
+        .draw().unwrap();
+    }
+
     pub fn plot_timeseries(&self, path: &str, caption: &str, data: Vec<(i32, f64)>, color: &RGBColor, label: &str) {
 
         //initialize image

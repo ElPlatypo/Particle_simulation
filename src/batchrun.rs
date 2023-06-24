@@ -24,8 +24,8 @@ impl Batchrun {
         println!("> Beginning fill test");
 
         let mut rng: StdRng = StdRng::seed_from_u64(3463462432);
-        let order_plot = Plot::new(500, 500, 0..sim_lenght, 0.0..3.0);
-        let mut orders: Vec<Vec<(i32, f64)>> = vec![];
+        let order_plot = Plot::new(500, 500, 0..sim_lenght, 0.0..1.0);
+        let mut orders: Vec<Vec<Vec<(i32, f64)>>> = vec![];
         let fillpercentage = self.gen_range(self.runs_number as f64, min_fill, max_fill);
 
         for run in 0..self.runs_number {
@@ -36,13 +36,16 @@ impl Batchrun {
                 betaj,
                 fillpercentage[run as usize] as f32,
             );
-            let mut order: Vec<(i32, f64)> = vec![];
+            let mut order: Vec<Vec<(i32, f64)>> = vec![vec![], vec![], vec![]];
 
             board.initialize();
 
             for x in 0..sim_lenght {
                 board.advance_timestep_repulsive();
-                order.push((x, board.get_order_single() as f64))
+                let run_orders = board.get_order();
+                order[0].push((x, run_orders[0] as f64));
+                order[1].push((x, run_orders[1] as f64));
+                order[2].push((x, run_orders[2] as f64));
             }
             orders.push(order);
             println!("fill percentage: {:.2}", fillpercentage[run as usize]);
@@ -51,7 +54,7 @@ impl Batchrun {
         for value in fillpercentage {
             labels.push(value.to_string());
         }
-        order_plot.plot_multiple_timeseries(&(self.title.to_owned() + ".svg"), &self.title, orders, &BLUE, &RED, labels);
+        order_plot.plot_multiple_orders(&(self.title.to_owned() + ".svg"), &self.title, orders, &BLUE, &RED, labels);
 
     }
 
@@ -60,8 +63,8 @@ impl Batchrun {
         println!("> Beginning betaj test");
 
         let mut rng: StdRng = StdRng::seed_from_u64(3463462432);
-        let order_plot = Plot::new(500, 500, 0..sim_lenght, 0.0..3.0);
-        let mut orders: Vec<Vec<(i32, f64)>> = vec![];
+        let order_plot = Plot::new(500, 500, 0..sim_lenght, 0.0..1.0);
+        let mut orders: Vec<Vec<Vec<(i32, f64)>>> = vec![];
         let betajvalues = self.gen_range(self.runs_number as f64, min_betaj, max_betaj);
 
         for run in 0..self.runs_number {
@@ -70,15 +73,18 @@ impl Batchrun {
                 matrix_size,
                 StdRng::seed_from_u64(rng.gen()),
                 betajvalues[run as usize],
-                1.0/4.0,
+                1.0/3.0,
             );
-            let mut order: Vec<(i32, f64)> = vec![];
+            let mut order: Vec<Vec<(i32, f64)>> = vec![vec![], vec![], vec![]];
             println!("betaj: {:.2}", betajvalues[run as usize]);
             board.initialize();
 
             for x in 0..sim_lenght {
                 board.advance_timestep_repulsive();
-                order.push((x, board.get_order_single() as f64))
+                let run_orders = board.get_order();
+                order[0].push((x, run_orders[0] as f64));
+                order[1].push((x, run_orders[1] as f64));
+                order[2].push((x, run_orders[2] as f64));
             }
             orders.push(order);
         }
@@ -86,7 +92,7 @@ impl Batchrun {
         for value in betajvalues {
             labels.push(value.to_string());
         }
-        order_plot.plot_multiple_timeseries(&(self.title.to_owned() + ".svg"), &self.title, orders, &BLUE, &RED, labels);
+        order_plot.plot_multiple_orders(&(self.title.to_owned() + ".svg"), &self.title, orders, &BLUE, &RED, labels);
 
     }
 
@@ -95,8 +101,8 @@ impl Batchrun {
         println!("> Beginning size test");
 
         let mut rng: StdRng = StdRng::seed_from_u64(3463462432);
-        let order_plot = Plot::new(500, 500, 0..sim_lenght, 0.0..3.0);
-        let mut orders: Vec<Vec<(i32, f64)>> = vec![];
+        let order_plot = Plot::new(500, 500, 0..sim_lenght, 0.0..1.0);
+        let mut orders: Vec<Vec<Vec<(i32, f64)>>> = vec![];
         let sizes = self.gen_range(self.runs_number as f64, min_matrix_size as f64, max_matrix_size as f64);
 
         for run in 0..self.runs_number {
@@ -105,15 +111,18 @@ impl Batchrun {
                 sizes[run as usize] as u16,
                 StdRng::seed_from_u64(rng.gen()),
                 betaj,
-                1.0/4.0,
+                1.0/3.0,
             );
-            let mut order: Vec<(i32, f64)> = vec![];
+            let mut order: Vec<Vec<(i32, f64)>> = vec![vec![], vec![], vec![]];
             println!("size: {}", sizes[run as usize]);
             board.initialize();
 
             for x in 0..sim_lenght {
                 board.advance_timestep_repulsive();
-                order.push((x, board.get_order_single() as f64))
+                let run_orders = board.get_order();
+                order[0].push((x, run_orders[0] as f64));
+                order[1].push((x, run_orders[1] as f64));
+                order[2].push((x, run_orders[2] as f64));
             }
             orders.push(order);
         }
@@ -121,7 +130,7 @@ impl Batchrun {
         for value in sizes {
             labels.push(value.to_string());
         }
-        order_plot.plot_multiple_timeseries(&(self.title.to_owned() + ".svg"), &self.title, orders, &BLUE, &RED, labels);
+        order_plot.plot_multiple_orders(&(self.title.to_owned() + ".svg"), &self.title, orders, &BLUE, &RED, labels);
 
     }
 
