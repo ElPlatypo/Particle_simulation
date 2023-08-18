@@ -1,4 +1,4 @@
-#Repulsive particles simulation
+# Particle_simulation
 
 ![img1](img/Gridinit.png)
 
