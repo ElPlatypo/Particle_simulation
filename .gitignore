@@ -1,6 +1,6 @@
 /target
 /vis/venv
 *.svg
-*.png
+/*.png
 *.csv
 Cargo.lock
