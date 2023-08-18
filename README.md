@@ -9,14 +9,13 @@ This README provides an overview of a Rust simulation program that utilizes hexa
 - [Introduction](#introduction)
 - [Dependencies](#dependencies)
 - [Usage](#usage)
+- [Example](#example)
 - [Modules](#modules)
 - [Simulation](#simulation)
 - [Plots](#plots)
 - [Batch Runs](#batch-runs)
 - [HexBoard](#hexboard)
 - [Hex](#hex)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Introduction
 
