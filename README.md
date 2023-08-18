@@ -37,6 +37,21 @@ To use the program, you need to have Rust installed on your system. You can buil
 
 This will compile and execute the simulation program.
 
+## Example
+
+After initializing the lattice with 1/3 fill rate and letting the system reach a local minimum we get the following results:
+
+the particles order themselves as such:
+
+![img1](img/Grid.png)
+
+We can see how the system evolved to a naturally lower energy state
+
+![img1](img/Energy.png)
+
+We can even simulate multiple runs while varying the parameter of disorder of the system
+
+![img1](img/Disorder-Variation.png)
 ## Modules
 
 The program is organized into several modules:
