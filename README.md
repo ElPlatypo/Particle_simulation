@@ -49,6 +49,10 @@ We can see how the system evolved to a naturally lower energy state
 
 ![img1](img/Energy.png)
 
+And how the system reached one of 3 possible ordering base-states
+
+![img2](img/Totalorder.png)
+
 We can even simulate multiple runs while varying the parameter of disorder of the system
 
 ![img1](img/Disorder-Variation.png)
@@ -79,6 +83,3 @@ The `HexBoard` struct in the `hexboard` module represents the hexagonal lattice 
 ## Hex
 
 The `Hex` struct in the `hexboard` module represents a hexagonal lattice cell. It stores the cell's position and value (occupied or unoccupied).
-
-
-![img2](img/Totalorder.png)
